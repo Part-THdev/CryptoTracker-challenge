@@ -5,6 +5,7 @@ import Coin from "./routes/Coin";
 import { GlobalStyle } from "./GlobalStyle";
 import Price from "./routes/Price";
 import Chart from "./routes/Chart";
+import { ReactQueryDevtools } from "react-query/devtools";
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,7 @@ function App() {
     <>
       <GlobalStyle />
       <RouterProvider router={router} />
+      <ReactQueryDevtools />
     </>
   );
 }

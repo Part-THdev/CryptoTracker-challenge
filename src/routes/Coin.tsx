@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import { useMatch } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Outlet, useLocation, useParams } from "react-router-dom";
 import styled from "styled-components";
+import { fetchCoinInfo, fetchCoinPrice } from "./api";
 
 const Container = styled.div`
   padding: 0 50px;
@@ -60,12 +61,12 @@ const Taps = styled.div`
   margin: 30px 0;
   gap: 10px;
 `;
-const Tap = styled.span<{ isActive: boolean }>`
+const Tap = styled.span<{ isactive: boolean }>`
   text-align: center;
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 15px;
   color: ${(props) =>
-    props.isActive ? props.theme.accentColor : props.theme.textColor};
+    props.isactive ? props.theme.accentColor : props.theme.textColor};
   a {
     display: block;
     padding: 10px;
@@ -136,67 +137,77 @@ interface IPriceData {
 
 export default function Coin() {
   const { coinId } = useParams();
-  const [isLoading, setLoading] = useState(true);
   const { state } = useLocation() as ILocation;
-  const [info, setInfo] = useState<IInfoData>();
-  const [price, setPrice] = useState<IPriceData>();
   const priceMatch = useMatch("/:coinId/price");
   const chartMatch = useMatch("/:coinId/chart");
-  useEffect(() => {
-    (async () => {
-      const infoData = await (
-        await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
-      ).json();
-      const priceData = await (
-        await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
-      ).json();
-      setInfo(infoData);
-      setPrice(priceData);
-      setLoading(false);
-    })();
-  }, []);
 
+  const { isLoading: infoLoading, data: infoData } = useQuery<IInfoData>(
+    ["info", coinId],
+    () => fetchCoinInfo(coinId)
+  );
+  const { isLoading: priceLoading, data: priceData } = useQuery<IPriceData>(
+    ["price", coinId],
+    () => fetchCoinPrice(coinId)
+  );
+  const loading = infoLoading || priceLoading;
+
+  // const [info, setInfo] = useState<IInfoData>();
+  // const [price, setPrice] = useState<IPriceData>();
+  // const [isLoading, setLoading] = useState(true);
+  // useEffect(() => {
+  //   (async () => {
+  //     const infoData = await (
+  //       await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
+  //     ).json();
+  //     const priceData = await (
+  //       await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
+  //     ).json();
+  //     setInfo(infoData);
+  //     setPrice(priceData);
+  //     setLoading(false);
+  //   })();
+  // }, []);
   return (
     <Container>
       <Header>
         <Title>
-          {state?.name ? state.name : isLoading ? "Loading..." : info?.name}
+          {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
         </Title>
       </Header>
-      {isLoading ? (
+      {loading ? (
         <Loading>Loading...</Loading>
       ) : (
         <>
           <OverView>
             <OverViewItem>
               <span>Rank:</span>
-              <span>{info?.rank}</span>
+              <span>{infoData?.rank}</span>
             </OverViewItem>
             <OverViewItem>
               <span>Symbol:</span>
-              <span>{info?.symbol}</span>
+              <span>{infoData?.symbol}</span>
             </OverViewItem>
             <OverViewItem>
               <span>Open Source:</span>
-              <span>{info?.open_source ? "Yes" : "No"}</span>
+              <span>{infoData?.open_source ? "Yes" : "No"}</span>
             </OverViewItem>
           </OverView>
-          <Description>{info?.description}</Description>
+          <Description>{infoData?.description}</Description>
           <OverView>
             <OverViewItem>
               <span>Total Suply:</span>
-              <span>{price?.total_supply}</span>
+              <span>{priceData?.total_supply}</span>
             </OverViewItem>
             <OverViewItem>
               <span>Max Supply:</span>
-              <span>{price?.max_supply}</span>
+              <span>{priceData?.max_supply}</span>
             </OverViewItem>
           </OverView>
           <Taps>
-            <Tap isActive={priceMatch !== null}>
+            <Tap isactive={priceMatch !== null}>
               <Link to={"price"}>Price</Link>
             </Tap>
-            <Tap isActive={chartMatch !== null}>
+            <Tap isactive={chartMatch !== null}>
               <Link to={"chart"}>Chart</Link>
             </Tap>
           </Taps>
