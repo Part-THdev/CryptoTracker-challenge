@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/CryptoTracker-challenge/static/js/main.fcb642d6.js",
+    "main.js": "/CryptoTracker-challenge/static/js/main.e94c89b3.js",
     "index.html": "/CryptoTracker-challenge/index.html",
-    "main.fcb642d6.js.map": "/CryptoTracker-challenge/static/js/main.fcb642d6.js.map"
+    "main.e94c89b3.js.map": "/CryptoTracker-challenge/static/js/main.e94c89b3.js.map"
   },
   "entrypoints": [
-    "static/js/main.fcb642d6.js"
+    "static/js/main.e94c89b3.js"
   ]
 }
