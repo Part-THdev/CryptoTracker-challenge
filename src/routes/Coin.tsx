@@ -206,7 +206,7 @@ export default function Coin() {
             </OverViewItem>
             <OverViewItem>
               <span>price:</span>
-              <span>${priceData?.quotes.USD.price.toFixed(3)}</span>
+              <span>${priceData?.quotes?.USD?.price.toFixed(3)}</span>
             </OverViewItem>
           </OverView>
           <Description>{infoData?.description}</Description>

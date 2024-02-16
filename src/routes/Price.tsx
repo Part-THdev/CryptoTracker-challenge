@@ -71,12 +71,14 @@ export default function Price() {
           <Wrapper>
             <OverView>
               <h1>{data?.name} 현재가</h1>
-              <OverViewItem>:${data?.quotes.USD.price.toFixed(2)}</OverViewItem>
+              <OverViewItem>
+                :${data?.quotes?.USD?.price.toFixed(2)}
+              </OverViewItem>
             </OverView>
             <OverView>
               <h1>{data?.name} 역대 최고가</h1>
               <OverViewItem>
-                :${data?.quotes.USD.ath_price.toFixed(2)}
+                :${data?.quotes?.USD?.ath_price.toFixed(2)}
               </OverViewItem>
             </OverView>
           </Wrapper>

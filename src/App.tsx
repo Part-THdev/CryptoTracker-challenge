@@ -10,32 +10,37 @@ import styled, { ThemeProvider } from "styled-components";
 import { darkTheme, lightTheme } from "./theme";
 import { useState } from "react";
 
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+  [
+    {
+      path: "/",
+      element: <Layout />,
+      children: [
+        {
+          path: "",
+          element: <Coins />,
+        },
+        {
+          path: ":coinId",
+          element: <Coin />,
+          children: [
+            {
+              path: "price",
+              element: <Price />,
+            },
+            {
+              path: "chart",
+              element: <Chart />,
+            },
+          ],
+        },
+      ],
+    },
+  ],
   {
-    path: "/",
-    element: <Layout />,
-    children: [
-      {
-        path: "",
-        element: <Coins />,
-      },
-      {
-        path: ":coinId",
-        element: <Coin />,
-        children: [
-          {
-            path: "price",
-            element: <Price />,
-          },
-          {
-            path: "chart",
-            element: <Chart />,
-          },
-        ],
-      },
-    ],
-  },
-]);
+    basename: "/CryptoTracker-challenge",
+  }
+);
 
 const ModeBtn = styled.svg`
   cursor: pointer;
