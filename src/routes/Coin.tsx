@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Outlet, useLocation, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { fetchCoinInfo, fetchCoinPrice } from "./api";
+import { Helmet } from "react-helmet";
 
 const Container = styled.div`
   padding: 0 50px;
@@ -13,14 +14,21 @@ const Container = styled.div`
 `;
 
 const Header = styled.header`
-  height: 10vh;
-  display: flex;
-  justify-content: center;
+  height: 8vh;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  justify-items: center;
   align-items: center;
 `;
 
 const Title = styled.h1`
-  font-size: 48px;
+  font-weight: 700;
+  font-size: 45px;
+  color: ${(props) => props.theme.accentColor};
+`;
+
+const HomeBtn = styled.div`
+  font-size: 40px;
   color: ${(props) => props.theme.accentColor};
 `;
 
@@ -32,7 +40,7 @@ const Loading = styled.div`
 const OverView = styled.div`
   display: flex;
   justify-content: space-between;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: ${(props) => props.theme.itemColor};
   padding: 10px 20px;
   border-radius: 15px;
 `;
@@ -43,16 +51,19 @@ const OverViewItem = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-
+  font-size: 22px;
   span:first-child {
-    font-weight: 500;
+    font-weight: 600;
     font-size: 13px;
     text-transform: uppercase;
+    color: ${(props) => props.theme.accentColor};
   }
 `;
 
 const Description = styled.p`
   margin: 25px 0;
+  color: ${(props) => props.theme.textColor};
+  font-size: 20px;
 `;
 
 const Taps = styled.div`
@@ -63,7 +74,7 @@ const Taps = styled.div`
 `;
 const Tap = styled.span<{ isactive: boolean }>`
   text-align: center;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: ${(props) => props.theme.itemColor};
   border-radius: 15px;
   color: ${(props) =>
     props.isactive ? props.theme.accentColor : props.theme.textColor};
@@ -169,7 +180,13 @@ export default function Coin() {
   // }, []);
   return (
     <Container>
+      <Helmet>
+        <title>{infoData?.name}</title>
+      </Helmet>
       <Header>
+        <HomeBtn>
+          <Link to={"/"}>←</Link>
+        </HomeBtn>
         <Title>
           {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
         </Title>
@@ -188,8 +205,8 @@ export default function Coin() {
               <span>{infoData?.symbol}</span>
             </OverViewItem>
             <OverViewItem>
-              <span>Open Source:</span>
-              <span>{infoData?.open_source ? "Yes" : "No"}</span>
+              <span>price:</span>
+              <span>${priceData?.quotes.USD.price.toFixed(3)}</span>
             </OverViewItem>
           </OverView>
           <Description>{infoData?.description}</Description>
